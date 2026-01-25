@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="main single">
+
+  <header class="day-header">
+    <h1>{{ day.date }}</h1>
+
+    {% if is_active %}
+      <span class="badge active">ACTIVE</span>
+    {% elif is_open %}
+      <span class="badge open">OPEN</span>
+    {% else %}
+      <span class="badge closed">CLOSED</span>
+    {% endif %}
+  </header>
+
+  <section class="day-card">
+    <h3>Tasks</h3>
+
+    {% for task in incomplete_tasks %}
+      <div class="task readonly">
+        <span>{{ task.title }}</span>
+        <span class="tag pending">Pending</span>
+      </div>
+    {% endfor %}
+
+    {% for task in completed_tasks %}
+      <div class="task readonly completed">
+        <span>{{ task.title }}</span>
+        <span class="tag done">Completed</span>
+      </div>
+    {% endfor %}
+  </section>
+
+  <a href="{% url 'today' %}" class="back-link">← Back to active day</a>
+
+</div>
+
+{% endblock %}
