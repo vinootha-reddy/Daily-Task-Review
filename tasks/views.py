@@ -1,38 +1,13 @@
 from datetime import date
-import os
 from django.contrib.auth.decorators import login_required   
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
-
-
-from .models import TaskStatus
+from .models import TaskStatus, Day
 from .services import get_active_day, get_open_days, set_active_day, \
-         create_task, toggle_task_status, delete_task, \
-         close_active_day_and_open_next
-
-
-def create_superuser_once(request):
-    if User.objects.filter(is_superuser=True).exists():
-        return HttpResponse("Superuser already exists")
-
-    username = os.getenv("ADMIN_USERNAME")
-    password = os.getenv("ADMIN_PASSWORD")
-    email = os.getenv("ADMIN_EMAIL")
-
-    if not all([username, password, email]):
-        return HttpResponse("Missing env vars")
-
-    User.objects.create_superuser(
-        username=username,
-        password=password,
-        email=email
-    )
-    return HttpResponse("Superuser created")
+    create_task, toggle_task_status, delete_task, \
+    close_active_day_and_open_next
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 def signup_view(request):
@@ -46,7 +21,7 @@ def signup_view(request):
             login(request, user)
 
             from .services import ensure_first_day
-            ensure_first_day(user)   # ✅ THIS WAS MISSING
+            ensure_first_day(user) 
 
             return redirect('today')
     else:
@@ -75,24 +50,12 @@ def close_day(request):
     task_ids = request.POST.getlist('carry_tasks')
     close_active_day_and_open_next(user, task_ids)
     return redirect('today')
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST
-from django.contrib.auth.models import User
 
-from .models import Day, TaskStatus
-from .services import get_active_day, get_open_days,\
-    set_active_day, create_task, toggle_task_status, \
-    delete_task, close_active_day_and_open_next
-
-# ------------------------
-# Main views
-# ------------------------
 
 @login_required
 def today_view(request):
     user = request.user
 
-    # 🔥 STEP 6 — auto-create first day if missing
     Day.objects.get_or_create(
         user=user,
         date=date.today(),
@@ -113,7 +76,6 @@ def today_view(request):
     })
 
 
-
 def day_view(request, day_id):
     """
     View any day (calendar navigation)
@@ -129,10 +91,6 @@ def day_view(request, day_id):
         "completed_tasks": day.tasks.filter(status=TaskStatus.COMPLETED),
     })
 
-
-# ------------------------
-# Actions
-# ------------------------
 
 @require_POST
 def add_task_view(request):
