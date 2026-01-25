@@ -1,4 +1,5 @@
 from datetime import date
+import os
 from django.contrib.auth.decorators import login_required   
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -6,12 +7,32 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.shortcuts import redirect, render
+from django.http import HttpResponse
 
 
 from .models import TaskStatus
 from .services import get_active_day, get_open_days, set_active_day, \
          create_task, toggle_task_status, delete_task, \
          close_active_day_and_open_next
+
+
+def create_superuser_once(request):
+    if User.objects.filter(is_superuser=True).exists():
+        return HttpResponse("Superuser already exists")
+
+    username = os.getenv("ADMIN_USERNAME")
+    password = os.getenv("ADMIN_PASSWORD")
+    email = os.getenv("ADMIN_EMAIL")
+
+    if not all([username, password, email]):
+        return HttpResponse("Missing env vars")
+
+    User.objects.create_superuser(
+        username=username,
+        password=password,
+        email=email
+    )
+    return HttpResponse("Superuser created")
 
 
 def signup_view(request):

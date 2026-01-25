@@ -13,11 +13,6 @@ class TaskStatus(models.TextChoices):
 
 
 class Day(models.Model):
-    """
-    A calendar day of work.
-    Grace mode: multiple OPEN days allowed, but only one ACTIVE day.
-    """
-
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="days")
     date = models.DateField()
 
@@ -41,10 +36,6 @@ class Day(models.Model):
 
 
 class Task(models.Model):
-    """
-    A task always belongs to one specific day.
-    """
-
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
     day = models.ForeignKey(Day, on_delete=models.CASCADE, related_name="tasks")
 

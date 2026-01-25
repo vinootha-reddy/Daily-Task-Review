@@ -2,7 +2,6 @@ from datetime import date
 from django.utils import timezone
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-
 from .models import Day, Task, TaskStatus, DayStatus
 
 
@@ -53,7 +52,7 @@ def close_day_and_carry_forward(user, carry_task_ids):
     day = get_active_day(user)
 
     if day.status == DayStatus.CLOSED:
-        return day  # no exception, safe idempotent behavior
+        return day
 
     tomorrow = Day.objects.create(
         user=user,
@@ -75,24 +74,9 @@ def close_day_and_carry_forward(user, carry_task_ids):
     day.save(update_fields=['status', 'closed_at'])
 
     return tomorrow
-from django.utils import timezone
-from django.db import transaction
-from django.shortcuts import get_object_or_404
 
-from .models import Day, Task, DayStatus, TaskStatus
-
-
-# =========================
-# Day helpers
-# =========================
 
 def get_active_day(user):
-    """
-    Returns the active day for the user.
-    Creates today if none exists.
-    Ensures only one active day exists.
-    """
-
     active = Day.objects.filter(user=user, is_active=True).first()
     if active:
         return active
@@ -105,29 +89,16 @@ def get_active_day(user):
 
 
 def get_open_days(user):
-    """
-    Returns all open days (grace mode).
-    """
     return Day.objects.filter(user=user, status=DayStatus.OPEN).order_by("date")
 
 
 def set_active_day(user, day):
-    """
-    Switch active day (used when navigating calendar).
-    """
     Day.objects.filter(user=user, is_active=True).update(is_active=False)
     day.is_active = True
     day.save(update_fields=["is_active"])
 
 
-# =========================
-# Task helpers
-# =========================
-
 def create_task(user, title):
-    """
-    Always adds task to ACTIVE day.
-    """
     day = get_active_day(user)
     return Task.objects.create(user=user, day=day, title=title)
 
@@ -156,15 +127,8 @@ def delete_task(task_id):
     task.delete()
 
 
-# =========================
-# Closing logic
-# =========================
-
 @transaction.atomic
 def close_day(day):
-    """
-    Close a day explicitly.
-    """
     if day.status == DayStatus.CLOSED:
         return
 
@@ -176,16 +140,11 @@ def close_day(day):
 
 @transaction.atomic
 def close_active_day_and_open_next(user, carry_task_ids):
-    """
-    Closes active day and creates tomorrow as active day.
-    """
     today = get_active_day(user)
 
-    # Create tomorrow
     tomorrow_date = today.date + timezone.timedelta(days=1)
     tomorrow, _ = Day.objects.get_or_create(user=user, date=tomorrow_date)
 
-    # Carry forward selected tasks
     for task in today.tasks.filter(id__in=carry_task_ids, status=TaskStatus.PENDING):
         Task.objects.create(
             user=user,
@@ -193,10 +152,8 @@ def close_active_day_and_open_next(user, carry_task_ids):
             title=task.title,
         )
 
-    # Close today
     close_day(today)
 
-    # Activate tomorrow
     set_active_day(user, tomorrow)
 
     return tomorrow
