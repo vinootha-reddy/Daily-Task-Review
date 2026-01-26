@@ -2,26 +2,25 @@
 
 {% block content %}
 <div class="auth-card">
-  <h2>Welcome back</h2>
-  <p class="muted">Login to continue your daily review</p>
+  <h2>Welcome Back</h2>
+  <p class="muted">Sign in to continue your daily task review journey</p>
 
   {% if form.errors %}
-      <div class="form-alert">
-        Invalid username or password. Please try again.
-      </div>
+    <div class="form-alert">
+      Invalid username or password. Please try again.
+    </div>
   {% endif %}
-
 
   <form method="post">
     {% csrf_token %}
 
-    <label>Username</label>
-    <input type="text" name="username" required>
+    <label for="id_username">Username</label>
+    <input type="text" name="username" id="id_username" required autofocus>
 
-    <label>Password</label>
-    <input type="password" name="password" required>
+    <label for="id_password">Password</label>
+    <input type="password" name="password" id="id_password" required>
 
-    <button class="primary-btn">Login</button>
+    <button type="submit" class="primary-btn">Sign In</button>
   </form>
 
   <p class="auth-footer">

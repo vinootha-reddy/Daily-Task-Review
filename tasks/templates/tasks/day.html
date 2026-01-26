@@ -2,40 +2,69 @@
 
 {% block content %}
 
-<div class="main single">
+<div class="layout">
 
-  <header class="day-header">
-    <h1>{{ day.date }}</h1>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h3>All Days</h3>
 
-    {% if is_active %}
-      <span class="badge active">ACTIVE</span>
-    {% elif is_open %}
-      <span class="badge open">OPEN</span>
-    {% else %}
-      <span class="badge closed">CLOSED</span>
-    {% endif %}
-  </header>
+    {% for d in all_days %}
+      {% if d.id != active_day.id %}
+        <a href="{% url 'day_view' d.id %}"
+           class="day-link {% if d.id == day.id %}active-day{% endif %}">
+          {{ d.date }}
 
-  <section class="day-card">
-    <h3>Tasks</h3>
-
-    {% for task in incomplete_tasks %}
-      <div class="task readonly">
-        <span>{{ task.title }}</span>
-        <span class="tag pending">Pending</span>
-      </div>
+          {% if d.status == 'OPEN' %}<span class="dot yellow"></span>{% endif %}
+          {% if d.status == 'CLOSED' %}<span class="dot gray"></span>{% endif %}
+        </a>
+      {% endif %}
     {% endfor %}
+  </aside>
 
-    {% for task in completed_tasks %}
-      <div class="task readonly completed">
-        <span>{{ task.title }}</span>
-        <span class="tag done">Completed</span>
-      </div>
-    {% endfor %}
-  </section>
+  <!-- Main -->
+  <main class="main">
 
-  <a href="{% url 'today' %}" class="back-link">← Back to active day</a>
+    <header class="day-header">
+      <h1>{{ day.date|date:"F j, Y" }}</h1>
 
+      {% if is_active %}
+        <span class="badge active">Active</span>
+      {% elif is_open %}
+        <span class="badge open">Open</span>
+      {% else %}
+        <span class="badge closed">Closed</span>
+      {% endif %}
+    </header>
+
+    <section class="day-card">
+      <h3>Tasks Summary</h3>
+
+      {% if incomplete_tasks %}
+        {% for task in incomplete_tasks %}
+          <div class="task readonly">
+            <span>{{ task.title }}</span>
+            <span class="tag pending">Pending</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% if completed_tasks %}
+        {% for task in completed_tasks %}
+          <div class="task readonly completed">
+            <span>{{ task.title }}</span>
+            <span class="tag done">Completed</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% if not incomplete_tasks and not completed_tasks %}
+        <p class="muted">No tasks recorded for this day</p>
+      {% endif %}
+    </section>
+
+    <a href="{% url 'today' %}" class="back-link">← Back to Active Day</a>
+
+  </main>
 </div>
 
 {% endblock %}

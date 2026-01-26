@@ -7,7 +7,7 @@
 
   <!-- Sidebar -->
   <aside class="sidebar">
-    <h3>Days</h3>
+    <h3>All Days</h3>
 
     {% for d in all_days %}
       <a href="{% url 'day_view' d.id %}"
@@ -25,22 +25,22 @@
   <main class="main">
 
     <header>
-      <h1>{{ day.date }}</h1>
-      <span class="badge active">ACTIVE</span>
+      <h1>{{ day.date|date:"F j, Y" }}</h1>
+      <span class="badge active">Active Day</span>
     </header>
 
     <!-- ADD TASK -->
     <form method="post" action="{% url 'add_task' %}" class="add-form">
       {% csrf_token %}
-      <input type="text" name="title" placeholder="Add task..." required>
-      <button type="submit">Add</button>
+      <input type="text" name="title" placeholder="Add a new task..." required autofocus>
+      <button type="submit">Add Task</button>
     </form>
 
     <div class="columns">
 
       <!-- INCOMPLETE -->
       <section>
-        <h3>Incomplete</h3>
+        <h3>In Progress</h3>
 
         {% for task in incomplete_tasks %}
           <div class="task">
@@ -49,17 +49,17 @@
             <div class="actions">
               <form method="post" action="{% url 'toggle_task' task.id %}">
                 {% csrf_token %}
-                <button type="submit" class="done">Done</button>
+                <button type="submit" class="done">Complete</button>
               </form>
 
               <form method="post" action="{% url 'delete_task' task.id %}">
                 {% csrf_token %}
-                <button type="submit" class="delete">✕</button>
+                <button type="submit" class="delete">×</button>
               </form>
             </div>
           </div>
         {% empty %}
-          <p class="muted">No pending tasks</p>
+          <p class="muted">No pending tasks. Add one above to get started.</p>
         {% endfor %}
       </section>
 
@@ -73,11 +73,11 @@
 
             <form method="post" action="{% url 'toggle_task' task.id %}">
               {% csrf_token %}
-              <button type="submit" class="undo">Undo</button>
+              <button type="submit" class="undo">Reopen</button>
             </form>
           </div>
         {% empty %}
-          <p class="muted">No completed tasks</p>
+          <p class="muted">Completed tasks will appear here</p>
         {% endfor %}
       </section>
 
@@ -86,13 +86,14 @@
     <!-- CLOSE DAY -->
     <form method="post" action="{% url 'close_active_day' %}" class="close-box">
       {% csrf_token %}
-      <h3>Carry forward unfinished tasks</h3>
+      <h3>Close Active Day</h3>
+      <p class="muted" style="margin-bottom: 12px;">Select tasks to carry forward to the next day:</p>
 
       {% for task in incomplete_tasks %}
         <label>
           <input type="checkbox" name="carry_tasks" value="{{ task.id }}">
           {{ task.title }}
-        </label><br>
+        </label>
       {% endfor %}
 
       <button type="submit" class="close-day">Close Day</button>

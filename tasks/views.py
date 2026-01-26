@@ -82,6 +82,7 @@ def day_view(request, day_id):
     """
     user = request.user
     day = get_object_or_404(Day, id=day_id, user=user)
+    active_day = get_active_day(user)
 
     return render(request, "tasks/day.html", {
         "day": day,
@@ -89,6 +90,8 @@ def day_view(request, day_id):
         "is_open": day.status == "OPEN",
         "incomplete_tasks": day.tasks.filter(status=TaskStatus.PENDING),
         "completed_tasks": day.tasks.filter(status=TaskStatus.COMPLETED),
+        "all_days": Day.objects.filter(user=user).order_by("-date"),
+        "active_day": active_day,
     })
 
 

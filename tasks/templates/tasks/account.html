@@ -13,12 +13,12 @@
 
     <div class="account-row">
       <span>Email</span>
-      <strong>{{ user.email|default:"—" }}</strong>
+      <strong>{{ user.email|default:"Not set" }}</strong>
     </div>
 
     <div class="account-row">
-      <span>Joined</span>
-      <strong>{{ user.date_joined|date:"M d, Y" }}</strong>
+      <span>Member Since</span>
+      <strong>{{ user.date_joined|date:"F j, Y" }}</strong>
     </div>
 
   </div>

@@ -2,42 +2,42 @@
 
 {% block content %}
 <div class="auth-card">
-  <h2>Create account</h2>
-  <p class="muted">Start tracking your days</p>
+  <h2>Create Account</h2>
+  <p class="muted">Start tracking your daily tasks and boost productivity</p>
 
   {% if form.errors %}
-      <div class="form-alert">
-        <ul>
-          {% for field in form %}
-            {% for error in field.errors %}
-              <li>{{ error }}</li>
-            {% endfor %}
-          {% endfor %}
-
-          {% for error in form.non_field_errors %}
+    <div class="form-alert">
+      <ul>
+        {% for field in form %}
+          {% for error in field.errors %}
             <li>{{ error }}</li>
           {% endfor %}
-        </ul>
-      </div>
+        {% endfor %}
+
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
   {% endif %}
 
   <form method="post">
     {% csrf_token %}
 
-    <label>Username</label>
+    <label for="id_username">Username</label>
     {{ form.username }}
 
-    <label>Password</label>
+    <label for="id_password1">Password</label>
     {{ form.password1 }}
 
-    <label>Confirm password</label>
+    <label for="id_password2">Confirm Password</label>
     {{ form.password2 }}
 
-    <button class="primary-btn">Create account</button>
+    <button type="submit" class="primary-btn">Create Account</button>
   </form>
 
   <p class="auth-footer">
-    Already have an account? <a href="{% url 'login' %}">Login</a>
+    Already have an account? <a href="{% url 'login' %}">Sign in</a>
   </p>
 </div>
 {% endblock %}

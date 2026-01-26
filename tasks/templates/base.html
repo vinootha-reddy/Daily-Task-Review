@@ -1,39 +1,89 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Daily Task Review{% endblock %}</title>
-  <link rel="stylesheet" href="{% static 'tasks/style.css' %}?v=2">
+  <link rel="stylesheet" href="{% static 'tasks/style.css' %}?v=4">
+  
+  <script>
+    // Theme initialization - runs immediately to prevent flash
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
 
 <div class="app">
 
+  {% if user.is_authenticated %}
     <header class="topbar">
       <h1 class="logo">Daily Task Review</h1>
 
-      {% if user.is_authenticated %}
-        <div class="header-actions">
-          <a href="{% url 'account' %}" class="account-link">
-            <span class="avatar">
-              {{ user.username|first|upper }}
-            </span>
-            <span class="username">{{ user.username }}</span>
-          </a>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span class="theme-icon" id="themeIcon">●</span>
+          <span id="themeLabel">Dark</span>
+        </button>
 
-          <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button class="logout-btn">Logout</button>
-          </form>
-        </div>
-      {% endif %}
+        <a href="{% url 'account' %}" class="account-link">
+          <span class="avatar">
+            {{ user.username|first|upper }}
+          </span>
+          <span class="username">{{ user.username }}</span>
+        </a>
+
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button class="logout-btn">Sign Out</button>
+        </form>
+      </div>
     </header>
+  {% endif %}
 
   <main>
     {% block content %}{% endblock %}
   </main>
 
 </div>
+
+<script>
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+  
+  function updateThemeIcon(theme) {
+    if (theme === 'dark') {
+      themeIcon.textContent = '○';
+      themeLabel.textContent = 'Light';
+    } else {
+      themeIcon.textContent = '●';
+      themeLabel.textContent = 'Dark';
+    }
+  }
+  
+  // Initialize icon based on current theme
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  updateThemeIcon(currentTheme);
+  
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+  }
+</script>
 
 </body>
 </html>
