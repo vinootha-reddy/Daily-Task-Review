@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="account-wrapper">
+  <div class="account-card">
+
+    <h2>My Account</h2>
+
+    <div class="account-row">
+      <span>Username</span>
+      <strong>{{ user.username }}</strong>
+    </div>
+
+    <div class="account-row">
+      <span>Email</span>
+      <strong>{{ user.email|default:"—" }}</strong>
+    </div>
+
+    <div class="account-row">
+      <span>Joined</span>
+      <strong>{{ user.date_joined|date:"M d, Y" }}</strong>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

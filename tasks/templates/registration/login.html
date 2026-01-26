@@ -6,10 +6,11 @@
   <p class="muted">Login to continue your daily review</p>
 
   {% if form.errors %}
-    <div class="error-box">
-      Invalid username or password
-    </div>
-  {% endif %}
+      <div class="form-alert">
+        Invalid username or password. Please try again.
+      </div>
+    {% endif %}
+
 
   <form method="post">
     {% csrf_token %}

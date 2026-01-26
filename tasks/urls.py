@@ -8,6 +8,7 @@ urlpatterns = [
     path("day/<int:day_id>/", views.day_view, name="day_view"),
 
     # actions
+    path("account/", views.account_view, name="account"),
     path("add/", views.add_task_view, name="add_task"),
     path("toggle/<int:task_id>/", views.toggle_task_view, name="toggle_task"),
     path("delete/<int:task_id>/", views.delete_task_view, name="delete_task"),

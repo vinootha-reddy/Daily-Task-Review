@@ -9,16 +9,25 @@
 
 <div class="app">
 
-  <header class="topbar">
-    <h1 class="logo">Daily Task Review</h1>
+    <header class="topbar">
+      <h1 class="logo">Daily Task Review</h1>
 
-    {% if user.is_authenticated %}
-      <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button class="logout-btn">Logout</button>
-      </form>
-    {% endif %}
-  </header>
+      {% if user.is_authenticated %}
+        <div class="header-actions">
+          <a href="{% url 'account' %}" class="account-link">
+            <span class="avatar">
+              {{ user.username|first|upper }}
+            </span>
+            <span class="username">{{ user.username }}</span>
+          </a>
+
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="logout-btn">Logout</button>
+          </form>
+        </div>
+      {% endif %}
+    </header>
 
   <main>
     {% block content %}{% endblock %}

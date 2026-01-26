@@ -126,3 +126,11 @@ def close_active_day_view(request):
     carry_task_ids = request.POST.getlist("carry_tasks")
     close_active_day_and_open_next(user, carry_task_ids)
     return redirect("today")
+
+
+@login_required
+def account_view(request):
+    user = request.user
+    return render(request, "tasks/account.html", {
+        "user": user,
+    })

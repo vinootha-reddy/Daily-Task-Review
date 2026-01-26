@@ -341,29 +341,6 @@ button:hover {
   box-shadow: var(--shadow);
 }
 
-.auth-card h2 {
-  margin-bottom: 8px;
-}
-
-.auth-card input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 4px;
-  margin-bottom: 16px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-}
-
-.primary-btn {
-  width: 100%;
-  background: var(--blue);
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
 .primary-btn:hover {
   opacity: 0.9;
 }
@@ -428,3 +405,105 @@ button:hover {
 .error-box div {
   margin-bottom: 4px;
 }
+
+/* Header account area */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: 0.15s;
+}
+
+.account-link:hover {
+  background: #f1f5f9;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.username {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ======================
+   Auth error styling
+====================== */
+
+.form-alert {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #9f1239;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.form-alert ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.form-alert li {
+  margin: 4px 0;
+}
+
+/* ======================
+   Account page
+====================== */
+
+.account-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 80px;
+}
+
+.account-card {
+  width: 420px;
+  background: white;
+  padding: 32px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+}
+
+.account-card h2 {
+  margin-bottom: 24px;
+}
+
+.account-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.account-row:last-child {
+  border-bottom: none;
+}
+
+.account-row span {
+  color: var(--muted);
+}
+
