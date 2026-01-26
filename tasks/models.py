@@ -13,17 +13,15 @@ class TaskStatus(models.TextChoices):
 
 
 class Day(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="days")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="days")
     date = models.DateField()
-
     status = models.CharField(
         max_length=10,
         choices=DayStatus.choices,
         default=DayStatus.OPEN,
     )
-
     is_active = models.BooleanField(default=False)
-
     created_at = models.DateTimeField(auto_now_add=True)
     closed_at = models.DateTimeField(null=True, blank=True)
 
@@ -36,17 +34,16 @@ class Day(models.Model):
 
 
 class Task(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
-    day = models.ForeignKey(Day, on_delete=models.CASCADE, related_name="tasks")
-
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="tasks")
+    day = models.ForeignKey(
+        Day, on_delete=models.CASCADE, related_name="tasks")
     title = models.CharField(max_length=255)
-
     status = models.CharField(
         max_length=10,
         choices=TaskStatus.choices,
         default=TaskStatus.PENDING,
     )
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

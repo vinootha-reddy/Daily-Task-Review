@@ -13,17 +13,6 @@ def ensure_first_day(user):
             status="OPEN",
             is_active=True
         )
-        
-
-def get_active_day(user):
-    today = timezone.localdate()
-    day, _ = Day.objects.get_or_create(user=user, date=today)
-
-    if day.status == DayStatus.CLOSED:
-        tomorrow = today + timezone.timedelta(days=1)
-        day, _ = Day.objects.get_or_create(user=user, date=tomorrow)
-
-    return day
 
 
 def create_task(user, title):
@@ -101,21 +90,6 @@ def set_active_day(user, day):
 def create_task(user, title):
     day = get_active_day(user)
     return Task.objects.create(user=user, day=day, title=title)
-
-
-def toggle_task_status(task_id):
-    task = get_object_or_404(Task, id=task_id)
-
-    if task.day.status == DayStatus.CLOSED:
-        return task  # immutable
-
-    task.status = (
-        TaskStatus.COMPLETED
-        if task.status == TaskStatus.PENDING
-        else TaskStatus.PENDING
-    )
-    task.save(update_fields=["status"])
-    return task
 
 
 def delete_task(task_id):
