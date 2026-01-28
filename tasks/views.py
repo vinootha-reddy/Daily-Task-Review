@@ -56,12 +56,6 @@ def close_day(request):
 def today_view(request):
     user = request.user
 
-    Day.objects.get_or_create(
-        user=user,
-        date=date.today(),
-        defaults={"status": "OPEN", "is_active": True}
-    )
-
     day = get_active_day(user)
 
     all_days = Day.objects.filter(user=user).order_by("-date")

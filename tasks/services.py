@@ -65,15 +65,26 @@ def close_day_and_carry_forward(user, carry_task_ids):
     return tomorrow
 
 
+@transaction.atomic
 def get_active_day(user):
     active = Day.objects.filter(user=user, is_active=True).first()
     if active:
         return active
 
+    Day.objects.filter(user=user, is_active=True).update(is_active=False)
+    
     today = timezone.localdate()
-    day, _ = Day.objects.get_or_create(user=user, date=today)
-    day.is_active = True
-    day.save(update_fields=["is_active"])
+    day, created = Day.objects.get_or_create(
+        user=user, 
+        date=today,
+        defaults={
+            'status': DayStatus.OPEN,
+            'is_active': True
+        }
+    )
+    if not created and not day.is_active:
+        day.is_active = True
+        day.save(update_fields=["is_active"])
     return day
 
 
