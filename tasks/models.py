@@ -28,14 +28,6 @@ class Day(models.Model):
     class Meta:
         unique_together = ("user", "date")
         ordering = ["-date"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user'],
-                condition=models.Q(is_active=True),
-                name='unique_active_day_per_user'
-            )
-        ]
-
 
     def __str__(self):
         return f"{self.user.username} — {self.date} ({self.status})"
