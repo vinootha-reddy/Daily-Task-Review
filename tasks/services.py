@@ -72,6 +72,9 @@ def get_active_day(user):
 
     today = timezone.localdate()
     day, _ = Day.objects.get_or_create(user=user, date=today)
+    
+    # Deactivate all other days before setting this one as active
+    Day.objects.filter(user=user, is_active=True).update(is_active=False)
     day.is_active = True
     day.save(update_fields=["is_active"])
     return day

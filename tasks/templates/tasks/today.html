@@ -13,10 +13,9 @@
       <a href="{% url 'day_view' d.id %}"
          class="day-link {% if d.id == day.id %}active-day{% endif %}">
         {{ d.date }}
-
-        {% if d.is_active %}<span class="dot blue"></span>{% endif %}
-        {% if d.status == 'OPEN' and not d.is_active %}<span class="dot yellow"></span>{% endif %}
+        {% if d.id == day.id and d.status == 'OPEN' %}<span class="dot blue"></span>{% endif %}
         {% if d.status == 'CLOSED' %}<span class="dot gray"></span>{% endif %}
+        {% if d.status == 'OPEN' and d.id != day.id %}<span class="dot yellow"></span>{% endif %}
       </a>
     {% endfor %}
   </aside>
